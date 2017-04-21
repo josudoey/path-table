@@ -4,7 +4,9 @@
   "description": "provide a acl module for http",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha",
+    "coverage": "istanbul cover _mocha  --print both",
+    "eslint": "eslint ./index.js"
   },
   "repository": {
     "type": "git",
@@ -23,5 +25,9 @@
   "dependencies": {
     "minimatch": "^3.0.3",
     "path-to-regexp": "^1.7.0"
+  },
+  "devDependencies": {
+    "istanbul": "^0.4.5",
+    "mocha": "^3.2.0"
   }
 }
