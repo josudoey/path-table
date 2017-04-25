@@ -22,9 +22,19 @@ describe('rules', function () {
         path: '/test2/:any*'
       }, {
         action: 'allow',
-        method: ['put'],
-        role: ['user'],
-        path: '/test2/:any*'
+        method: ['get'],
+        role: ['user', 'admin'],
+        path: '/test3/:any*'
+      }, {
+        action: 'allow',
+        method: ['get'],
+        role: ['user', 'admin'],
+        path: '/test3/:any*'
+      }, {
+        action: 'allow',
+        method: ['post'],
+        role: ['admin'],
+        path: '/test3/post'
       }]
 
       entries.forEach(function (entry) {
@@ -54,6 +64,32 @@ describe('rules', function () {
       assert.ok(allow, 'should allow')
 
       allow = tb.areAnyAllow('/test2/hello', 'PUT', ['user'])
+      assert.ok(!allow, 'should not allow')
+    })
+
+    it('test3', function () {
+      var allow = tb.areAnyAllow('/test3', 'GET', undefined)
+      assert.ok(!allow, 'should not allow')
+
+      allow = tb.areAnyAllow('/test3', 'GET', ['user'])
+      assert.ok(allow, 'should allow')
+
+      allow = tb.areAnyAllow('/test3/hello', 'GET', ['admin'])
+      assert.ok(allow, 'should allow')
+
+      allow = tb.areAnyAllow('/test3/post', 'POST', ['user'])
+      assert.ok(!allow, 'should not allow')
+
+      allow = tb.areAnyAllow('/test3/post', 'POST', ['admin'])
+      assert.ok(allow, 'should allow')
+
+      allow = tb.areAnyAllow('/test3/post', 'POST', ['user', 'admin'])
+      assert.ok(allow, 'should allow')
+
+      allow = tb.areAnyAllow('/test3/post', 'POST', ['admin', 'user'])
+      assert.ok(allow, 'should allow')
+
+      allow = tb.areAnyAllow('/test3/hello', 'POST', ['admin'])
       assert.ok(!allow, 'should not allow')
     })
   })
