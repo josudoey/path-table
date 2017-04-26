@@ -35,6 +35,26 @@ describe('rules', function () {
         method: ['post'],
         role: ['admin'],
         path: '/test3/post'
+      }, {
+        action: 'allow',
+        method: ['get'],
+        role: ['admin'],
+        path: '/test4/get'
+      }, {
+        action: 'deny',
+        method: ['get'],
+        role: ['admin'],
+        path: '/test4/get'
+      }, {
+        action: 'deny',
+        method: ['post'],
+        role: ['admin'],
+        path: '/test4/post'
+      }, {
+        action: 'allow',
+        method: ['post'],
+        role: ['admin'],
+        path: '/test4/post'
       }]
 
       entries.forEach(function (entry) {
@@ -42,7 +62,7 @@ describe('rules', function () {
       })
     })
 
-    it('test', function () {
+    it('test: for default rule', function () {
       var allow = tb.areAnyAllow('/test', 'GET', undefined)
       assert.ok(allow, 'should allow')
 
@@ -53,7 +73,7 @@ describe('rules', function () {
       assert.ok(!allow, 'should not allow')
     })
 
-    it('test2', function () {
+    it('test2: for single role', function () {
       var allow = tb.areAnyAllow('/test2', 'GET', undefined)
       assert.ok(!allow, 'should not allow')
 
@@ -67,7 +87,7 @@ describe('rules', function () {
       assert.ok(!allow, 'should not allow')
     })
 
-    it('test3', function () {
+    it('test3: for multi role', function () {
       var allow = tb.areAnyAllow('/test3', 'GET', undefined)
       assert.ok(!allow, 'should not allow')
 
@@ -90,6 +110,29 @@ describe('rules', function () {
       assert.ok(allow, 'should allow')
 
       allow = tb.areAnyAllow('/test3/hello', 'POST', ['admin'])
+      assert.ok(!allow, 'should not allow')
+
+      allow = tb.areAnyAllow('/test3/hello', 'POST', [])
+      assert.ok(!allow, 'should not allow')
+    })
+
+    it('test4: for duplicate path rule', function () {
+      var allow = tb.areAnyAllow('/test4/get', 'GET', ['admin'])
+      assert.ok(allow, 'should allow')
+
+      allow = tb.areAnyAllow('/test4/post', 'POSt', ['admin'])
+      assert.ok(!allow, 'should not allow')
+
+      allow = tb.areAnyAllow('/test4/get', 'GET', ['user'])
+      assert.ok(!allow, 'should not allow')
+
+      allow = tb.areAnyAllow('/test4/post', 'POST', ['user'])
+      assert.ok(!allow, 'should not allow')
+
+      allow = tb.areAnyAllow('/test4/get', 'POST', undefined)
+      assert.ok(!allow, 'should not allow')
+
+      allow = tb.areAnyAllow('/test4/put', 'PUT', ['user'])
       assert.ok(!allow, 'should not allow')
     })
   })
