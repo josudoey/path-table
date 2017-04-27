@@ -1,6 +1,6 @@
 {
   "name": "path-table",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "provide a acl module for http",
   "main": "index.js",
   "scripts": {
